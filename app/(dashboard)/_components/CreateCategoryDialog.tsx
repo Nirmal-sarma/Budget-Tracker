@@ -7,24 +7,66 @@ import { TransactionType } from '@/lib/types'
 import { cn } from '@/lib/utils';
 import { CreateCategorySchema, CreateCategorySchemaType } from '@/schema/categories';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { CircleOff, PlusSquare } from 'lucide-react';
-import React, { useState } from 'react'
+import { CircleOff, Loader2, PlusSquare } from 'lucide-react';
+import React, { useCallback, useState } from 'react'
 import { useForm } from 'react-hook-form';
 import EmojiPicker from 'emoji-picker-react'
+import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { CreateCategory } from '../_actions/categories';
+import { Category } from '@/lib/generated/prisma';
+import { toast } from 'sonner';
+import { useTheme } from 'next-themes';
 
 
 interface Props {
-    type: TransactionType
+    type: TransactionType,
+    successCallback:(category:Category)=> void
+
 }
 
-function CreateCategoryDialog({ type }: Props) {
+function CreateCategoryDialog({ type,successCallback }: Props) {
     const [open, setOpen] = useState(false);
     const form = useForm<CreateCategorySchemaType>({
         resolver: zodResolver(CreateCategorySchema),
         defaultValues: {
-            type,
+            type
         }
     })
+    const queryClient = useQueryClient()
+    const theme =useTheme()
+    const { mutate, isPending } = useMutation({
+        mutationFn: CreateCategory,
+        onSuccess: async (data: Category) => {
+            form.reset({
+                name: "",
+                icon: "",
+                type,
+            })
+            toast.success(`Category ${data.name} created successfully🎉`, {
+                id: "create-category"
+            })
+            successCallback(data)
+            await queryClient.invalidateQueries({
+                queryKey: ["categories"]
+            })
+            setOpen(prev => !prev)
+        },
+        onError: () => {
+            toast.error("Something went wrong", {
+                id: "create-category"
+            });
+        }
+
+    })
+
+    const onSubmit = useCallback((values: CreateCategorySchemaType) => {
+        toast.loading("Creating category....", {
+            id: "create-category",
+        })
+        mutate(values)
+    }, [mutate])
+
+
     return (
         <Dialog open={open} onOpenChange={setOpen}>
             <DialogTrigger>
@@ -46,7 +88,7 @@ function CreateCategoryDialog({ type }: Props) {
                     </DialogDescription>
                 </DialogHeader>
                 <Form {...form}>
-                    <form className='space-y-8'>
+                    <form onSubmit={form.handleSubmit(onSubmit)} className='space-y-8'>
                         <FormField
                             control={form.control}
                             name="name"
@@ -56,10 +98,10 @@ function CreateCategoryDialog({ type }: Props) {
                                         Name
                                     </FormLabel>
                                     <FormControl>
-                                        <Input defaultValue={""} {...field} />
+                                        <Input placeholder="Category" {...field} />
                                     </FormControl>
                                     <FormDescription>
-                                        Transaction description (Optional)
+                                        This is how your category will look like
                                     </FormDescription>
                                 </FormItem>
 
@@ -76,26 +118,30 @@ function CreateCategoryDialog({ type }: Props) {
                                     <FormControl>
                                         <Popover>
                                             <PopoverTrigger asChild>
-                                                <Button variant="outline" className="flex flex-col h-[100px] w-full justify-center items-center">
+                                                <Button variant="outline" className="flex flex-col h-[100px] w-full justify-center items-center gap-2">
+                                                    <CircleOff className="h-[48px] w-[48px]" />
+
                                                     {field.value ? (
-                                                        <div className="flex flex-col items-center gap-2">
-                                                            <span className="text-5xl" role="img">
+                                                        <div className="flex flex-col items-center gap-1">
+                                                            <span className="text-3xl" role="img">
                                                                 {field.value}
                                                             </span>
                                                             <p className="text-xs text-muted-foreground">Click to Change</p>
                                                         </div>
                                                     ) : (
-                                                        <div className="flex flex-col items-center gap-2">
-                                                            <CircleOff className="h-[48px] w-[48px]" />
-                                                            <p className="text-xs text-muted-foreground">Click to Select</p>
-                                                        </div>
+                                                        <p className="text-xs text-muted-foreground">Click to Select</p>
                                                     )}
                                                 </Button>
                                             </PopoverTrigger>
-                                            <PopoverContent className="w-full">
+                                            <PopoverContent
+                                                side="bottom"
+                                                align="center"
+                                                className="w-[350px] max-h-[400px] overflow-y-auto z-50"
+                                            >
                                                 <EmojiPicker
+                                                    theme={theme.resolvedTheme}
                                                     onEmojiClick={(emojiData) => {
-                                                        field.onChange(emojiData.emoji) 
+                                                        field.onChange(emojiData.emoji)
                                                     }}
                                                 />
                                             </PopoverContent>
@@ -109,20 +155,24 @@ function CreateCategoryDialog({ type }: Props) {
                         />
                     </form>
                 </Form>
-            
-            <DialogFooter>
+
+                <DialogFooter>
                     <DialogClose asChild>
-                        <Button 
-                        type="button"
-                        variant={"secondary"}
-                        onClick={()=> form.reset()}
+                        <Button
+                            type="button"
+                            variant={"secondary"}
+                            onClick={() => form.reset()}
                         >
-                           
+
                             Cancel
                         </Button>
                     </DialogClose>
-                    <Button>Save</Button>
-            </DialogFooter>
+                    <Button onClick={form.handleSubmit(onSubmit)} disabled={isPending}>
+                        {!isPending && "Create"}
+                        {isPending && <Loader2 className='animate-spin' />}
+                    </Button>
+
+                </DialogFooter>
             </DialogContent>
         </Dialog>
     )

@@ -10,6 +10,7 @@ export async function GET(request:Request){
     }
     const {searchParams}=new URL(request.url)
     const paramType=searchParams.get("type")
+    console.log(paramType);
 
     const validator=z.enum(["expense","income"]).nullable();
     const queryParams=validator.safeParse(paramType);
@@ -19,14 +20,15 @@ export async function GET(request:Request){
         })
     }
     const type=queryParams.data;
+    console.log(type);
     const categories=await prisma.category.findMany({
         where:{
             userId:user.id,
             ...(type && {type}),
         },
         orderBy:{
-            name:"asc"
-        }
+            name:"asc",
+        },
     })
     return Response.json(categories)
 }

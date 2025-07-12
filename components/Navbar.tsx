@@ -37,7 +37,7 @@ return(
                    <Menu/>
                 </Button>
             </SheetTrigger>
-            <SheetContent className='w-[400px] sm:w-[540px]' side="left">
+            <SheetContent className='w-[350px] sm:w-[500px]' side="left">
                <Logo/>
                {items.map(item =>(
                 <NavbarItem 
