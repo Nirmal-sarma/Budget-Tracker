@@ -1,16 +1,15 @@
 "use client"
-
 import { DateRangePicker } from '@/components/ui/date-range-picker'
 import { MAX_DATE_RANGE_DAYS } from '@/lib/constants'
 import { UserSettings } from '@/lib/generated/prisma'
 import { differenceInDays, startOfMonth } from 'date-fns'
 import React, { ReactNode, useState } from 'react'
 import { toast } from 'sonner'
+import { StatsCards } from './StatsCards'
 
 interface Props {
     userSettings: UserSettings
 }
-
 
 const Overview = ({ userSettings }: Props) => {
     const [dateRange, setDateRange] = useState<{ from: Date, to: Date }>({
@@ -38,11 +37,12 @@ const Overview = ({ userSettings }: Props) => {
                             return;
                         }
                         setDateRange({from,to});
-
                     }}
+
                     />
                 </div>
             </div>
+            <StatsCards userSettings={userSettings} from={dateRange.from} to={dateRange.to} />
         </>
     )
 }
