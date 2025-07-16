@@ -37,7 +37,7 @@ async function getBalanceStats(userId: string, from:Date, to:Date) {
         by: ["type"],
         where: {
             userId,
-            date: {
+            createdAt: {
                 gte: from,
                 lte: to,
             },
@@ -46,7 +46,6 @@ async function getBalanceStats(userId: string, from:Date, to:Date) {
             amount: true,
         },
     });
-    console.log("Fetched totals:", totals);
     return {
         expense:totals.find((t) => t.type === "expense")?._sum.amount ?? 0,
         income:totals.find((t) => t.type === "income")?._sum.amount ?? 0,

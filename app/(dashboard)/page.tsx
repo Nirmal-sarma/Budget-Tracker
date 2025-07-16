@@ -5,6 +5,7 @@ import { redirect } from 'next/navigation';
 import React from 'react'
 import { CreateTransactionDialog } from './_components/CreateTransactionDialog';
 import Overview from './_components/Overview';
+import History from './_components/History';
 
 async function page() {
   const user = await currentUser();
@@ -21,7 +22,7 @@ async function page() {
     <div className='h-full bg-background'>
       <div className="borber-b bg-card">
         <div className="container flex flex-wrap items-center justify-between gap-6 py-4">
-          <p className="text-2xl font-bold">
+          <p className="text-2xl font-bold px-5">
             Welcome {user.firstName}!👋
           </p>
           <div className="flex item-center gap-3">
@@ -42,7 +43,8 @@ async function page() {
 
         </div>
       </div>
-      <Overview userSettings={userSettings}/>
+      {userSettings && <Overview userSettings={userSettings} />}
+      {userSettings && <History userSettings={userSettings} />}
     </div>
   )
 }
