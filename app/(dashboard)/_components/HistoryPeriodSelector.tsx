@@ -7,7 +7,6 @@ import SkeletonWrapper from '@/components/SkeletonWrapper';
 import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { GetHistoryPeriodsResponseType } from '@/app/api/history-periods/route';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { time } from 'console';
 
 interface Props {
     period: Period;
@@ -43,7 +42,7 @@ const HistoryPeriodSelector = ({ period, setPeriod, setTimeframe, timeframe }: P
                     />
                 </SkeletonWrapper>
                 {timeframe === "month" && (
-                    <SkeletonWrapper isLoading={historyPeriods.isFetching}>
+                    <SkeletonWrapper isLoading={historyPeriods.isFetching} fullWidth={false}>
                         <MonthSelector
                             period={period}
                             setPeriod={setPeriod}
