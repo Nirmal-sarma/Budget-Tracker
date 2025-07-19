@@ -35,6 +35,9 @@ export async function DeleteCategory(form: DeleteCategorySchemaType) {
     if (!user) {
         redirect("/sign-in")
     }
+
+    // Need to work here , we will use accumulator
+    
     const deletedTransactions = await prisma.transaction.deleteMany({
         where: {
             userId: user.id,

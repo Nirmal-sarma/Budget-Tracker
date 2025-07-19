@@ -19,7 +19,6 @@ export async function GET(request:Request){
         })
     }
     const type=queryParams.data;
-    console.log(type);
     const categories=await prisma.category.findMany({
         where:{
             userId:user.id,
