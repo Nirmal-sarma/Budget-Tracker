@@ -15,7 +15,9 @@ export async function GET(request: Request) {
 
     const queryParams = OverviewQuerySchema.safeParse({ from, to });
     if (!queryParams.success) {
-        return new Error(queryParams.error.message);
+        return new Response(JSON.stringify({ error: queryParams.error.message }), {
+            status: 400,
+        });
     }
 
     const stats = await getCategoriesStats(
