@@ -17,15 +17,18 @@ import { cn } from '@/lib/utils'
 import { DataTableFacetedFilter } from '@/components/datatable/FacetedFilter'
 import { DataTableViewOptions } from '@/components/datatable/ColumnToggle'
 import { Button } from '@/components/ui/button'
-import {download,generateCsv,mkConfig} from "export-to-csv"
+import {ConfigOptions, download,generateCsv,mkConfig} from "export-to-csv"
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from '@/components/ui/dropdown-menu'
 import DeleteTransactionDialog from './DeleteTransactionDialog'
 import { GetTransactionHistoryResponseType } from '@/schema/getexport'
+import { TransactionCSV } from '@/lib/types'
 interface Props {
     from: Date,
     to: Date
 }
-const emptyData: any[] = []
+
+
+const emptyData: TransactionHistoryRow[] = []
 type TransactionHistoryRow = GetTransactionHistoryResponseType[0]
 const columns: ColumnDef<TransactionHistoryRow>[] = [
     {
@@ -113,7 +116,7 @@ const columns: ColumnDef<TransactionHistoryRow>[] = [
     },
 ]
 
-const csvConfig=mkConfig({
+const csvConfig:Required<ConfigOptions>=mkConfig({
     fieldSeparator:",",
     decimalSeparator:".",
     useKeysAsHeaders:true,
@@ -127,12 +130,12 @@ const TransactionTable = ({ from, to }: Props) => {
         queryFn: () => fetch(`/api/transactions-history?from=${DateToUTCDate(from)}&to=${DateToUTCDate(to)}`).then((res) => res.json())
     });
 
-    const handleExportCSV=(data: any[])=>{
+    const handleExportCSV=(data:TransactionCSV[])=>{
         const csv=generateCsv(csvConfig)(data)
         download(csvConfig)(csv)
     }
 
-    const table = useReactTable({
+    const table = useReactTable<TransactionHistoryRow>({
         data: history.data || emptyData,
         columns,
         getCoreRowModel: getCoreRowModel(),
@@ -150,6 +153,7 @@ const TransactionTable = ({ from, to }: Props) => {
         onColumnFiltersChange: setColumnFilters,
         getFilteredRowModel: getFilteredRowModel(),
         getPaginationRowModel: getPaginationRowModel(),
+        enableRowSelection: true,
     });
 
     const categoriesOptions = useMemo(() => {
@@ -187,14 +191,14 @@ const TransactionTable = ({ from, to }: Props) => {
                     size={"sm"}
                     className='cursor-pointer ml-auto h-8 lg:flex'
                     onClick={() => {
-                        const data = table.getFilteredRowModel().rows.map((row) => ({
+                        const data:TransactionCSV[] = table.getFilteredRowModel().rows.map((row) => ({
                             category: row.original.category,
                             categoryIcon: row.original.categoryIcon,
                             description: row.original.description,
                             type: row.original.type,
                             amount: row.original.amount,
                             formattedAmount: row.original.formattedAmount,
-                            date: row.original.date,
+                            date: new Date(row.original.date).toLocaleDateString(),
                         }));
 
                         handleExportCSV(data);

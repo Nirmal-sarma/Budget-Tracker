@@ -21,7 +21,7 @@ export function getHistoryData(userId: string, timeframe: Timeframe, period: Per
         default: throw new Error("Invalid timeframe");
     }
 }
-type HistoryData = {
+export type HistoryData = {
     day?: number;
     year: number;
     month: number;

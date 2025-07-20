@@ -9,17 +9,21 @@ import React, { useCallback, useMemo, useState } from 'react'
 import HistoryPeriodSelector from './HistoryPeriodSelector';
 import { useQuery } from '@tanstack/react-query';
 import SkeletonWrapper from '@/components/SkeletonWrapper';
+import { TooltipContentProps } from 'recharts/types/component/Tooltip';
 import {
     Bar,
     BarChart,
     CartesianGrid,
     ResponsiveContainer,
     Tooltip,
+    TooltipProps,
     XAxis,
     YAxis,
 } from 'recharts';
 import { cn } from '@/lib/utils';
 import CountUp from 'react-countup';
+import { HistoryData } from '@/schema/getexport';
+
 
 const History = ({ userSettings }: { userSettings: UserSettings }) => {
     const [timeframe, setTimeframe] = useState<Timeframe>("month");
@@ -36,7 +40,8 @@ const History = ({ userSettings }: { userSettings: UserSettings }) => {
         queryFn:
             () => fetch(`/api/history-data?timeframe=${timeframe}&year=${period.year}&month=${period.month}`)
                 .then(res => res.json())
-    })
+    });
+
 
     const dataAvailable = historyDataQuery.data && historyDataQuery.data.length > 0;
 
@@ -121,8 +126,8 @@ const History = ({ userSettings }: { userSettings: UserSettings }) => {
                                         <Bar dataKey={"expense"} label="Expense" fill="url(#expenseBar)" radius={4} className='cursor-pointer' />
                                         <Tooltip
                                             cursor={{ opacity: 0.1 }}
-                                            content={props => (
-                                                <CustomToolTip formatter={formatter}{...props} />
+                                            content={(props) => (
+                                                <CustomToolTip formatter={formatter} {...props} />
                                             )}
                                         />
                                     </BarChart>
@@ -148,10 +153,12 @@ const History = ({ userSettings }: { userSettings: UserSettings }) => {
 export default History
 
 
-function CustomToolTip({ active, payload, formatter }: any) {
+function CustomToolTip(props: TooltipContentProps<number, string> & { formatter: Intl.NumberFormat }) {
+    const { active, payload, formatter } = props;
     if (!active || !payload || payload.length === 0) {
         return null;
     }
+    console.log({active,payload,formatter})
     const data = payload[0].payload;
     const { expense, income } = data;
     return (
