@@ -7,7 +7,7 @@ import { DateToUTCDate, GetFormatterForCurrency } from '@/lib/helpers';
 import { TransactionType } from '@/lib/types';
 import { GetCategoriesStatsResponseType } from '@/schema/getexport';
 import { useQuery } from '@tanstack/react-query';
-import React, { ReactNode, useMemo } from 'react'
+import React, { useMemo } from 'react'
 
 interface Props {
     from: Date;

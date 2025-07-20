@@ -1,7 +1,7 @@
 "use client"
 
 import { Category } from '@/lib/generated/prisma'
-import { useMutation, useMutationState, useQueryClient } from '@tanstack/react-query'
+import { useMutation, useQueryClient } from '@tanstack/react-query'
 import React, { ReactNode } from 'react'
 import { DeleteCategory } from '../_actions/categories'
 import { toast } from 'sonner'

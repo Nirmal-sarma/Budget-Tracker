@@ -6,8 +6,8 @@ import { UserSettings } from '@/lib/generated/prisma';
 import { DateToUTCDate, GetFormatterForCurrency } from '@/lib/helpers';
 import { GetBalanceStatsResponseType } from '@/schema/getexport';
 import { useQuery } from '@tanstack/react-query';
-import { TrendingDown, TrendingDownIcon, TrendingUp, Wallet } from 'lucide-react';
-import React, { useCallback, useEffect, useMemo } from 'react'
+import { TrendingDown, TrendingUp, Wallet } from 'lucide-react';
+import React, { useCallback, useMemo } from 'react'
 import CountUp from 'react-countup';
 
 interface Props {

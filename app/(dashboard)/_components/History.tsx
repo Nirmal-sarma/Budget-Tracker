@@ -18,7 +18,6 @@ import {
     XAxis,
     YAxis,
 } from 'recharts';
-import { FileLineChartIcon } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import CountUp from 'react-countup';
 

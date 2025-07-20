@@ -137,7 +137,7 @@ export function CreateTransactionDialog({ trigger, type }: Props) {
                             <FormField
                                 control={form.control}
                                 name="category"
-                                render={({ field }) => (
+                                render={() => (
                                     <FormItem className="flex flex-col">
                                         <FormLabel>
                                             Category
@@ -226,7 +226,5 @@ export function CreateTransactionDialog({ trigger, type }: Props) {
     )
 }
 
-function mutate(arg0: {}): any {
-    throw new Error("Function not implemented.");
-}
+
 

@@ -22,7 +22,7 @@ const page = async() => {
          Welcome,<span className="ml-2 font-bold">{user.firstName}!</span>
         </h1>
         <h2 className="mt-4 text-center text-base-muted-forefround">
-            Let's get started by setting up your currency
+            Lets get started by setting up your currency
         </h2>
         <h3 className='mt-2 text-center text-muted-foreground'>
             You can change these settings at anytime
@@ -42,7 +42,7 @@ const page = async() => {
         </Card>
         <Separator/>
         <Button className='w-full' asChild>
-            <Link href={"/"}>I'm done! take me to the dashboard</Link>
+            <Link href={"/"}>Im done! take me to the dashboard</Link>
         </Button>
         <div className="mt-8">
             <Logo/>
