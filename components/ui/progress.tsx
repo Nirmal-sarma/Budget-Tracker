@@ -27,7 +27,6 @@ function Progress({
           props.indicator
         )}
         style={{ transform: `translateX(-${100 - (value || 0)}%)` }}
-        p
       />
     </ProgressPrimitive.Root>
   )
