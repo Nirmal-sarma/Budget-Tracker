@@ -10,7 +10,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { CircleOff, Loader2, PlusSquare } from 'lucide-react';
 import React, { ReactNode, useCallback, useState } from 'react'
 import { useForm } from 'react-hook-form';
-import EmojiPicker from 'emoji-picker-react'
+import EmojiPicker,{Theme} from 'emoji-picker-react'
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { CreateCategory } from '../_actions/categories';
 import { Category } from '@/lib/generated/prisma';
@@ -20,12 +20,12 @@ import { useTheme } from 'next-themes';
 
 interface Props {
     type: TransactionType,
-    successCallback:(category:Category)=> void,
-    trigger?:ReactNode
+    successCallback: (category: Category) => void,
+    trigger?: ReactNode
 
 }
 
-function CreateCategoryDialog({ type,successCallback,trigger }: Props) {
+function CreateCategoryDialog({ type, successCallback, trigger }: Props) {
     const [open, setOpen] = useState(false);
     const form = useForm<CreateCategorySchemaType>({
         resolver: zodResolver(CreateCategorySchema),
@@ -34,7 +34,7 @@ function CreateCategoryDialog({ type,successCallback,trigger }: Props) {
         }
     })
     const queryClient = useQueryClient()
-    const theme =useTheme()
+    const theme = useTheme()
     const { mutate, isPending } = useMutation({
         mutationFn: CreateCategory,
         onSuccess: async (data: Category) => {
@@ -67,11 +67,17 @@ function CreateCategoryDialog({ type,successCallback,trigger }: Props) {
         mutate(values)
     }, [mutate])
 
+const emojiTheme: Theme =
+  theme.resolvedTheme === "dark"
+    ? Theme.DARK
+    : theme.resolvedTheme === "light"
+    ? Theme.LIGHT
+    : Theme.AUTO;
 
     return (
         <Dialog open={open} onOpenChange={setOpen}>
             <DialogTrigger asChild>
-                {trigger?trigger:(<Button variant={"ghost"} className='flex border-separate items-center justify-start rounded-none border-b px-3 py-3 text-muted-foreground'>
+                {trigger ? trigger : (<Button variant={"ghost"} className='flex border-separate items-center justify-start rounded-none border-b px-3 py-3 text-muted-foreground'>
                     <PlusSquare className='mr-2 h-4 w-4' />
                     Create new
                 </Button>)}
@@ -140,7 +146,7 @@ function CreateCategoryDialog({ type,successCallback,trigger }: Props) {
                                                 className="w-[350px] max-h-[400px] overflow-y-auto z-50"
                                             >
                                                 <EmojiPicker
-                                                    theme={theme.resolvedTheme}
+                                                    theme={emojiTheme}
                                                     onEmojiClick={(emojiData) => {
                                                         field.onChange(emojiData.emoji)
                                                     }}
