@@ -1,5 +1,4 @@
-import { DateToUTCDate } from "@/lib/helpers";
-import { prisma } from "@/lib/prisma";
+import { getBalanceStats } from "@/schema/getexport";
 import { OverviewQuerySchema } from "@/schema/overview";
 import { currentUser } from "@clerk/nextjs/server";
 import { redirect } from "next/navigation";
@@ -30,24 +29,3 @@ export async function GET(request: Request) {
 
 }
 
-export type GetBalanceStatsResponseType= Awaited<ReturnType<typeof getBalanceStats>>;
-
-async function getBalanceStats(userId: string, from:Date, to:Date) {
-   const totals=await prisma.transaction.groupBy({
-        by: ["type"],
-        where: {
-            userId,
-            createdAt: {
-                gte: from,
-                lte: to,
-            },
-        },
-        _sum: {
-            amount: true,
-        },
-    });
-    return {
-        expense:totals.find((t) => t.type === "expense")?._sum.amount ?? 0,
-        income:totals.find((t) => t.type === "income")?._sum.amount ?? 0,
-    }
-}

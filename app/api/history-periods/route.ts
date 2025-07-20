@@ -1,4 +1,5 @@
 import { prisma } from "@/lib/prisma";
+import { getHistoryPeriods } from "@/schema/getexport";
 import { currentUser } from "@clerk/nextjs/server";
 import { redirect } from "next/navigation";
 
@@ -11,28 +12,3 @@ export async function GET(request: Request) {
     return Response.json(periods);
 }
 
-export type GetHistoryPeriodsResponseType = Awaited<ReturnType<typeof getHistoryPeriods>>;
-
-async function getHistoryPeriods(userId: string) {
-    const result = await prisma.monthHistory.findMany({
-        where: {
-            userId,
-        },
-        select: {
-            year: true
-        },
-        distinct: ["year"],
-        orderBy: [
-            {
-                year: "asc",
-            },
-        ],
-    });
-
-    const year = result.map(ele => ele.year);
-
-    if(year.length === 0){
-        return [new Date().getFullYear()];
-    }
-    return year;
-}

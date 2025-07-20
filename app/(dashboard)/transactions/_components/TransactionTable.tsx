@@ -2,7 +2,6 @@ import { DateToUTCDate } from '@/lib/helpers'
 import { useQuery } from '@tanstack/react-query'
 import React, { useMemo, useState } from 'react'
 import { ColumnDef, ColumnFiltersState, flexRender, getCoreRowModel, getFilteredRowModel, getPaginationRowModel, getSortedRowModel, SortingState, useReactTable } from '@tanstack/react-table'
-import { GetTransactionHistoryResponseType } from '@/app/api/transactions-history/route'
 import { Divide, DownloadIcon, MoreHorizontal, TrashIcon } from 'lucide-react'
 import {
     Table,
@@ -22,6 +21,7 @@ import {download,generateCsv,mkConfig} from "export-to-csv"
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from '@/components/ui/dropdown-menu'
 import { Dropdown } from 'react-day-picker'
 import DeleteTransactionDialog from './DeleteTransactionDialog'
+import { GetTransactionHistoryResponseType } from '@/schema/getexport'
 interface Props {
     from: Date,
     to: Date

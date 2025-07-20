@@ -1,10 +1,10 @@
 "use client"
 
-import { GetBalanceStatsResponseType } from '@/app/api/stats/balance/route';
 import SkeletonWrapper from '@/components/SkeletonWrapper';
 import { Card } from '@/components/ui/card';
 import { UserSettings } from '@/lib/generated/prisma';
 import { DateToUTCDate, GetFormatterForCurrency } from '@/lib/helpers';
+import { GetBalanceStatsResponseType } from '@/schema/getexport';
 import { useQuery } from '@tanstack/react-query';
 import { TrendingDown, TrendingDownIcon, TrendingUp, Wallet } from 'lucide-react';
 import React, { useCallback, useEffect, useMemo } from 'react'

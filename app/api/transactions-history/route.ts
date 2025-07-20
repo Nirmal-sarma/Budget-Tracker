@@ -28,34 +28,3 @@ export async function GET(request:Request){
     return Response.json(transaction)
 
 }
-export type GetTransactionHistoryResponseType = Awaited<ReturnType<typeof getTransactionHistory>>;
-async function getTransactionHistory(userId:string,from:Date,to:Date){
-    const userSettings=await prisma.userSettings.findUnique({
-        where:{
-            userId,
-        }
-    });
-
-    if(!userSettings){
-        throw new Error("user settings not found");
-    }
-
-    const formatter=GetFormatterForCurrency(userSettings.currency);
-    const transactions=await prisma.transaction.findMany({
-        where:{
-            userId,
-            date:{
-                gte:from,
-                lte:to
-            }
-        },
-        orderBy:{
-            date:"desc"
-        }
-    });
-
-    return transactions.map((transaction) => ({
-        ...transaction,
-        formattedAmount: formatter.format(transaction.amount)
-    }));
-}
