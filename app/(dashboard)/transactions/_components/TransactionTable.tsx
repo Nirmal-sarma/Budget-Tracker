@@ -139,7 +139,7 @@ const TransactionTable = ({ from, to }: Props) => {
         getCoreRowModel: getCoreRowModel(),
         initialState:{
             pagination:{
-                pageSize:3
+                pageSize:5
             }
         },
         state: {

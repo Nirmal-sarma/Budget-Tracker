@@ -33,7 +33,6 @@ export const StatsCards = ({ from, to, userSettings }: Props) => {
     const expense = statsQuery.data?.expense || 0;
     const balance = income - expense;
     
-    console.log("StatsCards", { income, expense, balance, userSettings });
     return (
         <div className='flex flex-col lg:flex-row w-full gap-2 rounded-lg border p-4 px-5'>
             <SkeletonWrapper isLoading={statsQuery.isFetching}>
