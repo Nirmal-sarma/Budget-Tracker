@@ -1,11 +1,10 @@
-"use server"
+
 
 import { prisma } from "@/lib/prisma";
 import { CreateTransactionSchema, CreateTransactionSchemaType } from "@/schema/Transaction";
 import { currentUser } from "@clerk/nextjs/server";
 import { redirect } from "next/navigation";
 
-export const runtime = "nodejs";
 
 export async function CreateTransaction(form: CreateTransactionSchemaType) {
     const parseBody = CreateTransactionSchema.safeParse(form);
