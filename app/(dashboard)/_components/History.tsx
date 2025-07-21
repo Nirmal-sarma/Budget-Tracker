@@ -25,6 +25,8 @@ import CountUp from "react-countup";
 import { cn } from "@/lib/utils";
 /* ---------- chart wrapper ---------- */
 
+interface BarDatum { year:number; month:number; day?:number }
+
 const History = ({ userSettings }: { userSettings: UserSettings }) => {
   const [timeframe, setTimeframe] = useState<Timeframe>("month");
   const [period, setPeriod] = useState<Period>({
@@ -91,7 +93,7 @@ const History = ({ userSettings }: { userSettings: UserSettings }) => {
                     tickLine={false}
                     axisLine={false}
                     padding={{ left: 5, right: 5 }}
-                    dataKey={(d: any) => {
+                    dataKey={(d: BarDatum) => {
                       const date = new Date(d.year, d.month, d.day ?? 1);
                       return timeframe === "year"
                         ? date.toLocaleDateString("default", { month: "long" })
