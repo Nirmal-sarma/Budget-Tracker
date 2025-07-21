@@ -1,3 +1,4 @@
+"use server";
 
 import { prisma } from "@/lib/prisma";
 import { CreateCategorySchema, CreateCategorySchemaType, DeleteCategorySchema, DeleteCategorySchemaType } from "@/schema/categories";
