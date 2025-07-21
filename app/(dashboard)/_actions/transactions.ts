@@ -5,6 +5,8 @@ import { CreateTransactionSchema, CreateTransactionSchemaType } from "@/schema/T
 import { currentUser } from "@clerk/nextjs/server";
 import { redirect } from "next/navigation";
 
+export const runtime = "nodejs";
+
 export async function CreateTransaction(form: CreateTransactionSchemaType) {
     const parseBody = CreateTransactionSchema.safeParse(form);
     if (!parseBody.success) {
