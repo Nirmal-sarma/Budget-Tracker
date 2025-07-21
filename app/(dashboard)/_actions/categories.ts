@@ -1,5 +1,7 @@
 "use server"
 
+export const runtime = 'nodejs'
+
 import { prisma } from "@/lib/prisma";
 import { CreateCategorySchema, CreateCategorySchemaType, DeleteCategorySchema, DeleteCategorySchemaType } from "@/schema/categories";
 import { currentUser } from "@clerk/nextjs/server";

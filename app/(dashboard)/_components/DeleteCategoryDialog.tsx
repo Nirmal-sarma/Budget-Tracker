@@ -3,7 +3,7 @@
 import { Category } from '@/lib/generated/prisma'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import React, { ReactNode } from 'react'
-import { DeleteCategory } from '../_actions/categories'
+import { DeleteCategory } from "@/app/(dashboard)/_actions/categories"
 import { toast } from 'sonner'
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from '@/components/ui/alert-dialog'
 import { TransactionType } from '@/lib/types'

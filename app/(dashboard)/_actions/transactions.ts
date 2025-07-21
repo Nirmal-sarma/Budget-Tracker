@@ -1,5 +1,6 @@
 "use server"
 
+export const runtime = 'nodejs'
 import { prisma } from "@/lib/prisma";
 import { CreateTransactionSchema, CreateTransactionSchemaType } from "@/schema/Transaction";
 import { currentUser } from "@clerk/nextjs/server";
