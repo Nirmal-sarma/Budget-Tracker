@@ -15,7 +15,18 @@ import {
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { UserSettings } from "@/lib/generated/prisma";
-import type { HistoryData } from "@/schema/getexport";
+import { UserSettings } from "@/lib/generated/prisma";
+import { GetFormatterForCurrency } from "@/lib/helpers";
+import { Period, Timeframe } from "@/lib/types";
+import React, { useCallback, useMemo, useState } from "react";
+import HistoryPeriodSelector from "./HistoryPeriodSelector";
+import { useQuery } from "@tanstack/react-query";
+import SkeletonWrapper from "@/components/SkeletonWrapper";
+import CountUp from "react-countup";
+import { cn } from "@/lib/utils";
+/* ---------- chart wrapper ---------- */
+
+interface BarDatum { year:number; month:number; day?:number }
 import { GetFormatterForCurrency } from "@/lib/helpers";
 import { Period, Timeframe } from "@/lib/types";
 import React, { useCallback, useMemo, useState } from "react";
@@ -40,7 +51,7 @@ const History = ({ userSettings }: { userSettings: UserSettings }) => {
     [userSettings.currency]
   );
 
-  const { data, isFetching } = useQuery<HistoryData[]>({
+  const { data, isFetching } = useQuery({
     queryKey: ["overview", "history", timeframe, period],
     queryFn: () =>
       fetch(
@@ -48,7 +59,7 @@ const History = ({ userSettings }: { userSettings: UserSettings }) => {
       ).then((res) => res.json()),
   });
 
-  const hasData = Array.isArray(data) && data.length > 0;
+  const hasData = data?.length > 0;
 
   return (
     <div className="container px-6 py-3">
@@ -75,7 +86,7 @@ const History = ({ userSettings }: { userSettings: UserSettings }) => {
           <SkeletonWrapper isLoading={isFetching}>
             {hasData ? (
               <ResponsiveContainer width="100%" height={300}>
-                <BarChart data={Array.isArray(data) ? data : []} barCategoryGap={5}>
+                <BarChart data={data} barCategoryGap={5}>
                   {/* gradients */}
                   <defs>
                     <Gradient id="incomeBar" color="#10b981" />
@@ -94,8 +105,8 @@ const History = ({ userSettings }: { userSettings: UserSettings }) => {
                     tickLine={false}
                     axisLine={false}
                     padding={{ left: 5, right: 5 }}
-                    dataKey={(d: HistoryData | BarDatum) => {
-                      const date = new Date(d.year, d.month, (d as any).day ?? 1);
+                    dataKey={(d: BarDatum) => {
+                      const date = new Date(d.year, d.month, d.day ?? 1);
                       return timeframe === "year"
                         ? date.toLocaleDateString("default", { month: "long" })
                         : date.toLocaleDateString("default", { day: "2-digit" });

@@ -1,5 +1,4 @@
 import { getHistoryData, getHistoryDataSchema } from "@/schema/getexport";
-import { runWithPrisma } from "@/lib/prisma";
 import { currentUser } from "@clerk/nextjs/server";
 import { redirect } from "next/navigation";
 
@@ -26,12 +25,10 @@ export async function GET(request: Request) {
     if (!queryParams.success) {
         return Response.json(queryParams.error.message, { status: 400 });
     }
-    const data = await runWithPrisma(async () =>
-        getHistoryData(user.id, queryParams.data.timeframe, {
-            month: queryParams.data.month,
-            year: queryParams.data.year,
-        })
-    );
+    const data = await getHistoryData(user.id, queryParams.data.timeframe, {
+        month: queryParams.data.month,
+        year: queryParams.data.year,
+    });
 
     return Response.json(data);
 }
